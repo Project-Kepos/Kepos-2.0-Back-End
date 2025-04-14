@@ -2,7 +2,7 @@ package com.kepos.backend.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.kepos.backend.dto.DendroDTO
-import com.raposo.experiment.dto.DendroDTO
+import com.raposo.experiment.model.Modulo
 import com.raposo.experiment.model.Usuario
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
