@@ -1,7 +1,6 @@
-package com.raposo.experiment.model
+package com.kepos.backend.model
 
 import com.kepos.backend.dto.ModuloDTO
-import com.kepos.backend.model.Dendro
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
@@ -19,7 +18,10 @@ data class Modulo(
     @ManyToOne
     @JoinColumn(name = "dendro_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    var dendro: Dendro? = null
+    var dendro: Dendro? = null,
+
+    @Version
+    var version: Long? = null // Controle de versão
 ) {
     fun atualizarModulo(json: ModuloDTO) {
         json.name?.let { name = it }

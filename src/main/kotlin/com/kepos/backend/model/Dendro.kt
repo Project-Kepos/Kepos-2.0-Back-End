@@ -2,8 +2,6 @@ package com.kepos.backend.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.kepos.backend.dto.DendroDTO
-import com.raposo.experiment.model.Modulo
-import com.raposo.experiment.model.Usuario
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
@@ -17,9 +15,9 @@ data class Dendro(
     var humidity: Double? = null,
     var luminosity: Int? = null,
 
+    @OneToMany(mappedBy = "dendro", cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonIgnore
-    @OneToMany(mappedBy = "dendro")
-    var modules: List<Modulo> = mutableListOf(),
+    var modules: MutableList<Modulo> = mutableListOf(),
 
     @JsonIgnore
     @ManyToOne

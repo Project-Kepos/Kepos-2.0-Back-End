@@ -1,4 +1,4 @@
-package com.raposo.experiment.model
+package com.kepos.backend.model
 
 import com.kepos.backend.dto.UsuarioDTO
 import jakarta.persistence.Entity
