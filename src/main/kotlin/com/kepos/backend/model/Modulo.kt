@@ -4,16 +4,20 @@ import com.kepos.backend.dto.ModuloDTO
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import org.jetbrains.annotations.NotNull
+import java.sql.Time
+import java.util.*
 
 @Entity
 data class Modulo(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
+    @NotNull
     var name: String? = null,
     var desc: String? = null,
-    var humidity: Int? = null,
-    var humidityLevel: Int? = null,
+    var humidity: String? = null,
+    var humidityLevel: String? = null,
 
     @ManyToOne
     @JoinColumn(name = "dendro_id", referencedColumnName = "id")

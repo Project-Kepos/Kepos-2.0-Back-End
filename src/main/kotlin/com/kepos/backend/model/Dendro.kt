@@ -5,15 +5,19 @@ import com.kepos.backend.dto.DendroDTO
 import jakarta.persistence.*
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import org.jetbrains.annotations.NotNull
+import java.sql.Time
+import java.util.Date
 
 @Entity
 data class Dendro(
     @Id
     var id: String? = null,
-    var name: String? = null,
-    var temperature: Double? = null,
-    var humidity: Double? = null,
-    var luminosity: Int? = null,
+    @NotNull
+    var name: String,
+    var temperature: String? = null,
+    var humidity: String? = null,
+    var luminosity: String? = null,
 
     @OneToMany(mappedBy = "dendro", cascade = [CascadeType.ALL], orphanRemoval = true)
     @JsonIgnore

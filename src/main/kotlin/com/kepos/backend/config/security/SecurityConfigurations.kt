@@ -23,19 +23,15 @@ class SecurityConfigurations(
 ) {
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity, introspector: HandlerMappingIntrospector): SecurityFilterChain {
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .cors {}
-            .headers { it.frameOptions { frame -> frame.disable() } }
             .csrf { it.disable() }
-            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
-                it.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/usuario/login")).permitAll()
-                it.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/v1/usuario")).permitAll()
-                it.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/**")).permitAll() // Remover pós testes
-                it.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                it.anyRequest().authenticated()
+                it.requestMatchers("/api/v1/usuario/login", "/api/v1/usuario").permitAll()
+                it.anyRequest().authenticated() // Apenas esta configuração usa anyRequest()
             }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }

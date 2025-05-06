@@ -5,6 +5,8 @@ import com.kepos.backend.config.security.DadosTokenJWT
 import com.kepos.backend.dto.LoginDTO
 import com.kepos.backend.dto.UsuarioDTO
 import com.kepos.backend.service.IUsuarioService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
@@ -14,11 +16,14 @@ import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
 @RequestMapping("/api/v1/usuario")
+@Tag(name = "Usuario", description = "Endpoints para gerenciamento de Usuários")
 class APIUsuarioController(
     private val usuarioService: IUsuarioService
 ) {
 
     @GetMapping
+    @Operation(summary = "Consulta Usuário",
+        description = "Retorna os detalhes do usuário autenticado.")
     fun listaUsuarioLogado(request: HttpServletRequest): UsuarioDTO {
         val idUsuario = request.getAttribute("userId") as Long
         val usuario = usuarioService.listaUsuarioLogado(idUsuario)
@@ -27,6 +32,8 @@ class APIUsuarioController(
 
     // TODO: Verificar necessidade deste método
     @GetMapping("/todos")
+    @Operation(summary = "Consulta todos os Usuários",
+        description = "Retorna uma lista de todos os usuários cadastrados no sistema.")
     fun listaTodosUsuarios(): List<UsuarioDTO> {
         val usuarios = usuarioService.listaTodosUsuarios()
         return usuarios.map { UsuarioDTO(it.id) }
@@ -34,6 +41,8 @@ class APIUsuarioController(
 
     @PostMapping
     @Transactional
+    @Operation(summary = "Cadastra um novo Usuário",
+        description = "Cadastra um novo usuário no sistema.")
     fun cadastrarUsuario(
         @RequestBody @Valid json: UsuarioDTO,
         uriBuilder: UriComponentsBuilder
@@ -45,6 +54,8 @@ class APIUsuarioController(
 
     @PostMapping("/login")
     @Transactional
+    @Operation(summary = "Realiza o login do Usuário",
+        description = "Realiza o login do usuário e retorna um token JWT.")
     fun efetuarLogin(@RequestBody @Valid json: LoginDTO): DadosTokenJWT {
         val token = usuarioService.realizarLogin(json)
         return DadosTokenJWT(token)
@@ -52,6 +63,8 @@ class APIUsuarioController(
 
     @PutMapping
     @Transactional
+    @Operation(summary = "Atualiza os dados do Usuário",
+        description = "Atualiza os dados do usuário autenticado.")
     fun atualizarUsuario(
         request: HttpServletRequest,
         @RequestBody @Valid json: UsuarioDTO
@@ -64,6 +77,8 @@ class APIUsuarioController(
 
     @DeleteMapping
     @Transactional
+    @Operation(summary = "Deleta o Usuário",
+        description = "Remove o usuário autenticado do sistema.")
     fun deletarUsuario(request: HttpServletRequest) {
         val idUsuario = request.getAttribute("userId") as Long
         usuarioService.deletarUsuario(idUsuario)

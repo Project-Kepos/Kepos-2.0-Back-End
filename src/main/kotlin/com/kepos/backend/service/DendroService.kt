@@ -41,7 +41,13 @@ class DendroService(
     override fun cadastrarDendro(json: DendroDTO): Dendro {
         logger.info("Cadastrando Dendro")
         val id = json.id ?: throw ErroCustomizado("O id da dendro é obrigatório")
-        val dendro = Dendro(id, json.name, json.temperature, json.humidity, json.luminosity)
+        val dendro = Dendro(
+            id,
+            json.name ?: throw ErroCustomizado("O nome da dendro é obrigatório"),
+            json.temperature,
+            json.humidity,
+            json.luminosity
+        )
         return dendroRepository.save(dendro)
     }
 

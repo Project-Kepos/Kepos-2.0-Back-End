@@ -4,6 +4,8 @@ package com.kepos.backend.controller
 import com.kepos.backend.dto.DendroDTO
 import com.kepos.backend.model.Resposta
 import com.kepos.backend.service.IDendroService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus
@@ -13,12 +15,15 @@ import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
 @RequestMapping("/api/v1/dendro")
+@Tag(name = "Dendro", description = "Endpoints para gerenciamento de Dendros")
 class APIDendroController(
     private val dendroService: IDendroService
 ) {
 
     // TODO: Revisar necessidade deste método
     @GetMapping
+    @Operation(summary = "Consulta todos os Dendros",
+        description = "Retorna uma lista de todos os Dendros cadastrados no sistema.")
     fun consultaTodasDendros(): List<DendroDTO> {
         val dendros = dendroService.consultaTodasDendros()
         return dendros.map { DendroDTO(it.id) }
@@ -26,12 +31,16 @@ class APIDendroController(
 
     // TODO: Revisar necessidade deste método
     @GetMapping(params = ["nome"])
+    @Operation(summary = "Consulta Dendros por nome",
+        description = "Retorna uma lista de Dendros filtrados pelo nome.")
     fun consultaPorNome(@RequestParam nome: String): List<DendroDTO> {
         val dendros = dendroService.consultaDendrosPorNome(nome)
         return dendros.map { DendroDTO(it.toString()) }
     }
 
     @GetMapping("/usuario")
+    @Operation(summary = "Consulta Dendros por usuário",
+        description = "Retorna uma lista de Dendros associadas ao usuário autenticado.")
     fun consultaTodasDendrosPorUsuario(request: HttpServletRequest): List<DendroDTO> {
         val userId = request.getAttribute("userId") as Long
         val dendros = dendroService.consultaDendrosPorUsuario(userId)
@@ -39,6 +48,8 @@ class APIDendroController(
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Consulta Dendro por ID",
+        description = "Retorna os detalhes de um Dendro específico.")
     fun consultaPorId(@PathVariable id: String): DendroDTO {
         val dendro = dendroService.consultaDendroPorId(id)
         return DendroDTO(dendro.id)
@@ -46,6 +57,8 @@ class APIDendroController(
 
     @PostMapping
     @Transactional
+    @Operation(summary = "Cadastra um novo Dendro",
+        description = "Cria um novo Dendro no sistema.")
     fun cadastrarDendro(
         @RequestBody json: DendroDTO,
         uriBuilder: UriComponentsBuilder
@@ -57,6 +70,8 @@ class APIDendroController(
 
     @PatchMapping("/usuario")
     @Transactional
+    @Operation(summary = "Associa um usuário a um Dendro",
+        description = "Associa o usuário autenticado a um Dendro.")
     fun adicionarUsuario(@RequestBody json: DendroDTO, request: HttpServletRequest): DendroDTO {
         val userId = request.getAttribute("userId") as Long
         val dendro = dendroService.adicionarUsuario(userId, json)
@@ -65,6 +80,8 @@ class APIDendroController(
 
     @PatchMapping("/usuario/desassociar")
     @Transactional
+    @Operation(summary = "Desassocia um usuário de um Dendro",
+        description = "Remove a associação do usuário autenticado com o Dendro.")
     fun desassociarUsuario(@RequestBody json: DendroDTO): DendroDTO {
         val dendro = dendroService.removerUsuarioDendro(json)
         return DendroDTO(dendro.id)
@@ -72,6 +89,8 @@ class APIDendroController(
 
     @PatchMapping("/{id}")
     @Transactional
+    @Operation(summary = "Atualiza um Dendro",
+        description = "Atualiza os detalhes de um Dendro existente.")
     fun atualizarDendro(@PathVariable id: String, @RequestBody json: DendroDTO): DendroDTO {
         val dendro = dendroService.atualizarDendro(id, json)
         return DendroDTO(dendro.id)
@@ -79,6 +98,8 @@ class APIDendroController(
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "Deleta um Dendro",
+        description = "Remove um Dendro do sistema.")
     fun deletarDendro(@PathVariable id: String, request: HttpServletRequest): ResponseEntity<Any> {
         dendroService.deletarDendro(id)
 
